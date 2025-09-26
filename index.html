@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foodies — Healthy Food</title>
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: #eaeaea;
+      background: #0f0f11;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; border-radius: 16px; }
+    :root{
+      --accent: #ff6a00; /* оранжевый */
+      --accent-2:#ff8a33;
+      --bg-1:#0f0f11;
+      --bg-2:#151518;
+      --card:#18191d;
+      --muted:#b9bcc3;
+      --ring: rgba(255,106,0,.35);
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --shadow-2: 0 8px 24px rgba(255,106,0,.15);
+      --container: 1200px;
+    }
+    .container{ width: min(var(--container), calc(100% - 32px)); margin-inline: auto; }
+    .btn{
+      display:inline-flex;align-items:center;gap:.6rem;
+      padding:.9rem 1.2rem;border-radius:999px;font-weight:700;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#111; box-shadow: var(--shadow-2);
+      transition: transform .15s ease, box-shadow .2s ease, opacity .2s ease;
+      border:none; cursor:pointer;
+    }
+    .btn:hover{ transform: translateY(-2px); box-shadow:0 14px 30px rgba(255,106,0,.35); }
+    .btn.ghost{ background:transparent; border:1px solid #2a2b30; color:#eaeaea; box-shadow:none; }
+    .badge{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .7rem; border-radius:999px; border:1px solid #2a2b30; color:#d5d7dc; font-size:.82rem; }
+
+    /* ===== Header ===== */
+    .header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(15,15,17,.8), rgba(15,15,17,.3));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav{ display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.8rem 0; }
+    .logo{ display:flex; align-items:center; gap:.7rem; font-weight:800; letter-spacing:.2px; }
+    .logo-dot{ width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow:0 8px 18px rgba(255,106,0,.35); }
+    .menu{ display:flex; gap:1.2rem; flex-wrap:wrap; }
+    .menu a{ color:#cfd2d8; font-weight:600; opacity:.9; }
+    .menu a:hover{ color:#fff; }
+    .actions{ display:flex; gap:.6rem; align-items:center; }
+
+    /* ===== Hero ===== */
+    .hero{ position:relative; padding:64px 0 36px; overflow:hidden; }
+    .hero::before{
+      content:""; position:absolute; inset:-30% -10% auto -10%; height:100%;
+      background:
+        radial-gradient(600px 280px at 25% 10%, rgba(255,106,0,.25), transparent 60%),
+        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2200&auto=format&fit=crop') center/cover no-repeat;
+      filter: saturate(.6) contrast(.9) brightness(.8);
+      opacity:.22; pointer-events:none;
+    }
+    .hero-grid{ display:grid; grid-template-columns: 1.2fr .9fr; gap:34px; align-items:center; }
+    .hero h1{ font-size: clamp(34px, 5vw, 56px); line-height:1.1; margin:0 0 16px; }
+    .hero p{ color:#c5c8cf; margin:0 0 28px; font-size: clamp(16px, 2.3vw, 18px); max-width:60ch; }
+    .hero-card{ background: linear-gradient(180deg,#141519,#0e0f12); border:1px solid rgba(255,255,255,.06); border-radius: var(--radius); padding:20px; box-shadow: var(--shadow); overflow:hidden; }
+
+    .hero-carousel{ position:relative; }
+    .slides{ display:flex; transition: transform .5s ease; will-change: transform; border-radius: var(--radius); }
+    .slide{ height:360px; background:#111; position:relative; flex: 0 0 100%; width:100%; overflow:hidden; }
+    .slide img{ width:100%; height:100%; object-fit:cover; }
+    .dots{ display:flex; gap:8px; justify-content:center; margin-top:10px; }
+    .dot{ width:9px; height:9px; border-radius:999px; background:#34353a; border:1px solid #4a4b52; cursor:pointer; }
+    .dot.active{ background: linear-gradient(90deg,var(--accent),var(--accent-2)); border-color: transparent; box-shadow:0 0 0 6px var(--ring); }
+
+    /* ===== Highlights menus ===== */
+    .card-row{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; margin-top:26px; }
+    .card{
+      background:linear-gradient(180deg,#181a1f,#131419);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding:14px; box-shadow: var(--shadow);
+      transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .card:hover{ transform: translateY(-4px); border-color: rgba(255,106,0,.45); box-shadow: 0 16px 38px rgba(255,106,0,.14); }
+    .card h4{ margin:10px 0 2px; font-size:1.05rem; }
+    .card small{ color:#aeb2b9; }
+
+    /* ===== Why Us ===== */
+    .section{ padding:60px 0; }
+    .grid-4{ display:grid; grid-template-columns: repeat(4,1fr); gap:18px; }
+    .feature{ background: var(--card); border:1px solid rgba(255,255,255,.07); border-radius: var(--radius); padding:18px; }
+    .feature h5{ margin:.2rem 0 .3rem; font-size:1rem; }
+    .feature p{ margin:0; color:#b6bac1; font-size:.95rem; }
+
+    /* ===== Menu Gallery ===== */
+    .menu-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:12px; }
+    .menu-item{ position:relative; overflow:hidden; border-radius:16px; }
+    .menu-item .info{ position:absolute; inset:auto 10px 10px 10px; display:flex; justify-content:space-between; align-items:center; background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.65)); padding:10px 12px; border-radius:12px; }
+    .pill{ background:#0f0f11cc; color:#fff; border:1px solid rgba(255,255,255,.15); padding:.45rem .7rem; border-radius:999px; font-weight:700; font-size:.92rem; }
+
+    /* ===== About / Story ===== */
+    .about{
+      display:grid; grid-template-columns: .9fr 1.1fr; gap:32px; align-items:center;
+    }
+    .about .kicker{ color:var(--muted); text-transform:uppercase; letter-spacing:.16em; font-weight:700; font-size:.8rem; }
+    .about h2{ margin:.4rem 0 .5rem; font-size: clamp(26px, 3.2vw, 36px); }
+    .about p{ color:#c9cbd2; }
+
+    /* ===== Offer ===== */
+    .offer{ position:relative; overflow:hidden; border-radius:24px; background:linear-gradient(180deg,#181a1f 0%, #121316 100%); border:1px solid rgba(255,255,255,.08); padding:26px; }
+    .offer .row{ display:grid; grid-template-columns: 1.1fr .9fr; gap:22px; align-items:center; }
+    .offer .price{ font-size: 38px; font-weight: 900; color:#fff; }
+    .offer .bg{ position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=2400&auto=format&fit=crop') center/cover no-repeat; opacity:.12; filter: saturate(.6) contrast(.9); }
+
+    /* ===== Footer ===== */
+    .footer{ margin-top:50px; border-top:1px solid rgba(255,255,255,.06); padding:28px 0; color:#aeb2b9; }
+
+    /* ===== Who We Are ===== */
+    .who{ display:grid; grid-template-columns: 1.1fr .9fr; gap:24px; align-items:center; }
+    .stats{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin-top:14px; }
+    .stat{ background:var(--card); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px; text-align:center; }
+    .stat b{ font-size:1.4rem; }
+    .collage{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+    .collage img{ height:140px; object-fit:cover; border-radius:14px; }
+
+    /* ===== News ===== */
+    .news-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:16px; }
+    .post{ background:var(--card); border:1px solid rgba(255,255,255,.08); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; }
+    .post img{ height:180px; object-fit:cover; }
+    .post .body{ padding:14px; }
+    .post h4{ margin:.2rem 0 .4rem; }
+    .post time{ color:#aeb2b9; font-size:.9rem; }
+
+    /* ===== App & Loyalty ===== */
+    .cta-app p{color:#c7cad1;}
+    .app-grid{display:grid; grid-template-columns: 1fr 1fr 1.2fr; gap:18px; align-items:stretch;}
+    .qr-card{background:linear-gradient(180deg,#1b1c21,#121317); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:16px; box-shadow:0 12px 28px rgba(0,0,0,.35); height:100%; display:flex; flex-direction:column;}    
+    .qr-card .frame{background:radial-gradient(120% 120% at 0% 0%, rgba(255,106,0,.12), transparent 48%), #0e0f12; border:1px solid rgba(255,255,255,.1); border-radius:16px; padding:14px; display:flex; justify-content:center; align-items:center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);}   
+    .qr-card img{width:210px; height:210px; object-fit:contain; border-radius:12px; filter:contrast(1.05);}     
+    .qr-card h4{margin:.6rem 0 .2rem;}
+    .chip{display:inline-flex; align-items:center; border:1px solid rgba(255,255,255,.12); padding:.32rem .6rem; border-radius:999px; font-size:.88rem; color:#d6d9e0; margin-right:6px;}
+    .loyalty-card{background:linear-gradient(180deg,#1b1c21,#121317); border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:16px; box-shadow:0 12px 28px rgba(0,0,0,.35);} 
+    .tiers{display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin-top:10px;}
+    .tier{background:var(--card); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px;}
+    .tier b{font-size:1.1rem;}
+    .tier p{margin:.3rem 0 0; color:#c7cad1;}
+    @media (max-width: 1200px){ .app-grid{grid-template-columns:1fr 1fr;} }
+    @media (max-width: 860px){ .app-grid{grid-template-columns:1fr;} .tiers{grid-template-columns:1fr;} }
+
+    .pct{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+    .medal{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:999px;margin-right:6px;font-size:.9rem;background:linear-gradient(180deg,#26272c,#1a1b1f);border:1px solid rgba(255,255,255,.1)}
+    .tier{transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;}
+    .tier:hover{border-color: rgba(255,106,0,.5); box-shadow: 0 12px 28px rgba(255,106,0,.15); transform: translateY(-2px);} 
+
+    .cta-row{margin-top:16px; display:flex; justify-content:center; grid-column:1/-1;}
+    .btn-xl{padding:1.1rem 1.8rem; font-size:1.12rem; border-radius:999px; box-shadow:0 16px 38px rgba(255,106,0,.35);}  
+    .pct-chip{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#111; border-radius:999px; padding:.12rem .55rem; font-weight:800; font-size:.9rem; display:inline-block;}
+    .tier .sub{margin-top:4px; display:flex; align-items:center; gap:8px;}
+    .tier small{color:#c7cad1; display:inline-block; white-space:nowrap;}
+
+    .qr-card .desc{min-height:56px;}
+    .chip.link{cursor:pointer;}
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .card-row{ grid-template-columns: repeat(2,1fr); }
+      .grid-4{ grid-template-columns: repeat(2,1fr); }
+      .menu-grid{ grid-template-columns: repeat(3,1fr); }
+      .about{ grid-template-columns: 1fr; }
+      .offer .row{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px){
+      .menu{ display:none; }
+      .container{ width: calc(100% - 24px); }
+      /* Header */
+      .nav{ flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+      .actions{ justify-content:center; }
+      /* Hero */
+      .hero-grid{ grid-template-columns: 1fr; text-align:center; }
+      .badge{ margin-inline:auto; }
+      .card-row{ grid-template-columns: 1fr; }
+      /* Headings */
+      .section h2, .section h3, .kicker{ text-align:center; }
+      /* Generic sections */
+      .grid-4{ grid-template-columns: 1fr; text-align:center; }
+      .feature{ text-align:center; }
+      .brands{ justify-content:center; }
+      /* Who we are */
+      .who{ grid-template-columns: 1fr; text-align:center; }
+      .stats{ justify-items:center; }
+      /* Menu gallery */
+      .menu-grid{ grid-template-columns: 1fr; max-width:520px; margin:0 auto; }
+      /* About */
+      .about{ grid-template-columns: 1fr; text-align:center; }
+      .about img{ margin:0 auto; }
+      /* App & loyalty */
+      .app-grid{ grid-template-columns: 1fr; }
+      .cta-row{ justify-content:center; }
+      /* Testimonials */
+      .testimonials{ grid-template-columns: 1fr; }
+      /* Instagram */
+      .insta{ grid-template-columns: repeat(2,1fr); }
+      /* News */
+      .news-grid{ grid-template-columns: 1fr; }
+      .post{ text-align:center; }
+      .post img{ height: 200px; }
+      /* FAQ */
+      .faq{ grid-template-columns: 1fr; }
+      /* Contacts */
+      #contact .offer{ text-align:center; }
+      /* Footer */
+      .footer .container{ justify-content:center; }
+    }
+    @media (max-width: 400px){
+      .qr-card img{ width: 180px; height: 180px; }
+      .btn{ padding:.9rem 1rem; }
+      .btn-xl{ padding:1rem 1.4rem; font-size:1.05rem; }
+    }
+      .btn{ padding:.9rem 1rem; }
+      .btn-xl{ padding:1rem 1.4rem; font-size:1.05rem; }
+    }
+      .card-row{ grid-template-columns: 1fr; }
+      .grid-4{ grid-template-columns: 1fr; }
+      .menu-grid{ grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header class="header">
+    <div class="container nav">
+      <div class="logo">
+        <span class="logo-dot" aria-hidden="true"></span>
+        <div>
+          <div style="font-size: 1.05rem">Foodies</div>
+          <small style="color:#b8bbc2">Eat clean • Live well</small>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="#who">Кто мы</a>
+        <a href="#why">Почему мы</a>
+        <a href="#story">О нас</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+      <div class="actions">
+        <a class="btn" href="menu.html">Смотреть меню</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="who">
+    <div class="container hero-grid">
+      <div>
+        <span class="badge">100% натурально · Без сахара</span>
+        <h1>Healthy Food is Necessary For a <span style="background:linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">Healthy Life</span></h1>
+        <p>Готовим из локальных продуктов, поддерживаем фермеров и заботимся о вашем здоровье. Доставка и столики — в пару кликов.</p>
+        <div style="display:flex; gap:.6rem; flex-wrap:wrap;">
+          <a class="btn" href="menu.html">Смотреть меню</a>
+        </div>
+
+        <div class="card-row">
+          <!-- Burger -->
+          <article class="card">
+            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop" alt="Бургер" />
+            <h4>Burger Menu</h4>
+            <small>25+ позиций</small>
+          </article>
+          <!-- Pizza (highlight) -->
+          <article class="card" style="outline:2px solid var(--accent);">
+            <img src="https://images.unsplash.com/photo-1548365328-9f547fb0953d?q=80&w=1200&auto=format&fit=crop" alt="Пицца" />
+            <h4>Pizza Menu</h4>
+            <small>20+ позиций</small>
+          </article>
+          <!-- Sandwich -->
+          <article class="card">
+            <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1200&auto=format&fit=crop" alt="Сэндвичи" />
+            <h4>Sandwich Menu</h4>
+            <small>18+ позиций</small>
+          </article>
+          <!-- Salads/Burger -->
+          <article class="card">
+            <img src="https://images.unsplash.com/photo-1550547660-8bfc8a14167f?q=80&w=1200&auto=format&fit=crop" alt="Салаты" />
+            <h4>Green & Burger</h4>
+            <small>25+ позиций</small>
+          </article>
+        </div>
+      </div>
+
+      <div class="hero-card hero-carousel" aria-label="Популярные блюда">
+        <div class="slides" id="slides">
+          <div class="slide"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1800&auto=format&fit=crop" alt="Боул с брокколи"/></div>
+          <div class="slide"><img src="https://images.unsplash.com/photo-1604908554007-226c3f4b86f4?q=80&w=1800&auto=format&fit=crop" alt="Стейк с травами"/></div>
+          <div class="slide"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1800&auto=format&fit=crop" alt="Десерт с ягодами"/></div>
+        </div>
+        <div class="dots" id="dots" aria-label="Сменить слайд"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Who We Are (Кто мы) ===== -->
+  <section class="section">
+    <div class="container who">
+      <div>
+        <span class="kicker">Кто мы</span>
+        <h2>Команда Foodies — локальная кухня и честные продукты</h2>
+        <p>Мы — семейная команда поваров и бариста. Готовим из локальных ингредиентов, поддерживаем фермеров, работаем прозрачно и с душой. У нас можно поесть на месте, взять навынос и заказать доставку.</p>
+        <div class="stats">
+          <div class="stat"><b>7 лет</b><br><small>в городе</small></div>
+          <div class="stat"><b>1200+</b><br><small>отзывов ★4.8</small></div>
+          <div class="stat"><b>0%</b><br><small>рафинированного сахара</small></div>
+        </div>
+      </div>
+      <div class="collage">
+        <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1200&auto=format&fit=crop" alt="Команда"/>
+        <img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop" alt="Кухня"/>
+        <img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1200&auto=format&fit=crop" alt="Продукты"/>
+        <img src="https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?q=80&w=1200&auto=format&fit=crop" alt="Гости"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why Us ===== -->
+  <section id="why" class="section">
+    <div class="container">
+      <h2 style="margin:0 0 16px;">Почему мы лучшие?</h2>
+      <div class="grid-4">
+        <div class="feature">
+          <div class="badge">Легко заказать</div>
+          <h5>2 клика — и готово</h5>
+          <p>Удобный заказ и быстрая оплата. Самовывоз или доставка.</p>
+        </div>
+        <div class="feature">
+          <div class="badge">Эксперт‑шеф</div>
+          <h5>Авторские рецепты</h5>
+          <p>Меню от шефа: баланс вкуса, калорий и свежести.</p>
+        </div>
+        <div class="feature">
+          <div class="badge">Быстрая доставка</div>
+          <h5>По городу — мгновенно</h5>
+          <p>Партнёрские курьеры, бережная упаковка и горячие блюда.</p>
+        </div>
+        <div class="feature">
+          <div class="badge">Локальные фермы</div>
+          <h5>Только свежие продукты</h5>
+          <p>Сезонные ингредиенты от проверенных поставщиков.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Menu Grid ===== -->
+  <section id="menu" class="section" style="padding-top: 20px;">
+    <div class="container">
+      <h2 style="margin:0 0 16px;">Наше меню — популярные позиции</h2>
+      <div class="menu-grid">
+        <!-- 8 примеров -->
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?q=80&w=1800&auto=format&fit=crop" alt="Бургер"/>
+          <div class="info"><strong>BBQ Burger</strong><span class="pill" style="pointer-events:none;">3 900₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1539136788836-5699e78bfc75?q=80&w=1800&auto=format&fit=crop" alt="Пицца"/>
+          <div class="info"><strong>Margherita</strong><span class="pill" style="pointer-events:none;">3 500₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1800&auto=format&fit=crop" alt="Салат"/>
+          <div class="info"><strong>Caesar</strong><span class="pill" style="pointer-events:none;">2 800₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1800&auto=format&fit=crop" alt="Сэндвич"/>
+          <div class="info"><strong>Club Sandwich</strong><span class="pill" style="pointer-events:none;">2 600₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1800&auto=format&fit=crop" alt="Стейк"/>
+          <div class="info"><strong>Ribeye</strong><span class="pill" style="pointer-events:none;">8 900₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1540083691020-4b4b5078a5b3?q=80&w=1800&auto=format&fit=crop" alt="Суши"/>
+          <div class="info"><strong>Sushi Set</strong><span class="pill" style="pointer-events:none;">7 200₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1800&auto=format&fit=crop" alt="Боул"/>
+          <div class="info"><strong>Green Bowl</strong><span class="pill" style="pointer-events:none;">3 200₸</span></div>
+        </div>
+        <div class="menu-item">
+          <img src="https://images.unsplash.com/photo-1606756790138-261b3f3d42b0?q=80&w=1800&auto=format&fit=crop" alt="Десерт"/>
+          <div class="info"><strong>Chocolate Lava</strong><span class="pill" style="pointer-events:none;">2 100₸</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== News ===== -->
+  <section id="news" class="section" style="padding-top: 20px;">
+    <div class="container">
+      <h2 style="margin:0 0 16px;">Новости и акции</h2>
+      <div class="news-grid">
+        <article class="post">
+          <img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1600&auto=format&fit=crop" alt="Запустили сезонное меню"/>
+          <div class="body">
+            <time>Сегодня</time>
+            <h4>Сезонное меню: тыква, свёкла, гранат</h4>
+            <p style="color:#c7cad1;">Добавили 8 новых блюд и 3 напитка. Доступно в зале, навынос и в доставке.</p>
+          </div>
+        </article>
+        <article class="post">
+          <img src="https://images.unsplash.com/photo-1514511542834-34d61b98d1b4?q=80&w=1600&auto=format&fit=crop" alt="Скидка студентам"/>
+          <div class="body">
+            <time>На этой неделе</time>
+            <h4>-15% студентам по будням</h4>
+            <p style="color:#c7cad1;">Покажи студенческий — скидка действует с 10:00 до 16:00.</p>
+          </div>
+        </article>
+        <article class="post">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1600&auto=format&fit=crop" alt="Мастер-класс"/>
+          <div class="body">
+            <time>Воскресенье</time>
+            <h4>Мастер-класс от шефа</h4>
+            <p style="color:#c7cad1;">Как готовить боулы дома: сборка, соусы, баланс макро.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== About / Story ===== -->
+  <section id="story" class="section">
+    <div class="container about">
+      <div>
+        <span class="kicker">Наша история</span>
+        <h2>Где качество еды встречается с отличным сервисом</h2>
+        <p>В Foodies мы верим, что правильное питание должно быть вкусным. Команда работает с локальными фермами и заботится об устойчивости. Присоединяйтесь к нашему сообществу — готовим с любовью и уважением к продуктам.</p>
+        <div style="display:flex; gap:.6rem; flex-wrap:wrap; margin-top:10px;">
+          <a class="btn" href="menu.html">Смотреть меню</a>
+          <a class="btn ghost" href="#contact">Связаться</a>
+        </div>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1800&auto=format&fit=crop" alt="Команда на кухне"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== App & Loyalty ===== -->
+  <section class="section" id="app">
+    <div class="container offer cta-app">
+      <h3 style="margin:0 0 6px;">Наше приложение</h3>
+      <p>Сканируйте — и всё у вас в телефоне: приложение с меню и новостями, а также бонусная карта в Wallet. QR выполнены в премиальном стиле: тёмные карточки, аккуратная рамка и мягкая подсветка.</p>
+      <div class="app-grid">
+        <!-- QR: App -->
+        <div class="qr-card">
+          <div class="frame">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://example.com/app" alt="QR: App Store / Google Play" loading="lazy"/>
+          </div>
+          <h4>Скачать приложение</h4>
+          <a class="chip link" href="https://example.com/app?store=ios" target="_blank" rel="noopener">App Store</a><a class="chip link" href="https://example.com/app?store=android" target="_blank" rel="noopener">Google Play</a>
+          <p class="desc">Одна ссылка — определит платформу и откроет нужный магазин.</p>
+        </div>
+        <!-- QR: Wallet -->
+        <div class="qr-card">
+          <div class="frame">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://example.com/wallet" alt="QR: Wallet" loading="lazy"/>
+          </div>
+          <h4>Бонусная карта в Wallet</h4>
+          <a class="chip link" href="https://example.com/wallet?target=apple" target="_blank" rel="noopener">Apple Wallet</a><a class="chip link" href="https://example.com/wallet?target=google" target="_blank" rel="noopener">Google Wallet</a>
+          <p class="desc">Добавьте карту: баллы и статусы всегда под рукой, без приложений.</p>
+        </div>
+        <!-- Loyalty tiers -->
+        <div class="loyalty-card">
+          <h4 style="margin:0 0 6px;">Бонусная система</h4>
+          <p class="note" style="color:#c7cad1;">Повышенный % только за онлайн заказы</p>
+          <div class="tiers">
+            <div class="tier"><b><span class="medal">🥉</span>Bronze</b><div class="sub"><small>0–49 000₸</small><span class="pct-chip">3%</span></div></div>
+            <div class="tier"><b><span class="medal">🥈</span>Silver</b><div class="sub"><small>50–149 000₸</small><span class="pct-chip">5%</span></div></div>
+            <div class="tier"><b><span class="medal">🥇</span>Gold</b><div class="sub"><small>150 000₸+</small><span class="pct-chip">7%</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cta-row"><a class="btn btn-xl" href="https://example.com/wallet" target="_blank" rel="noopener">ПОЛУЧИТЬ БОНУСНУЮ КАРТУ</a></div>
+    </div>
+  </section>
+
+  <!-- ===== Contact / Footer ===== -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="offer" style="padding:22px;">
+        <h3 style="margin:0 0 8px;">Контакты</h3>
+        <p style="margin:.2rem 0 .8rem; color:#c7cad1;">Алматы · Ежедневно 10:00–23:00 · +7 (700) 000‑00‑00 · Instagram: @foodies</p>
+        <div style="display:flex; gap:.6rem; flex-wrap:wrap;">
+          <a class="btn" href="menu.html">Смотреть меню</a>
+          <a class="btn ghost" href="https://wa.me/77000000000" target="_blank" rel="noopener">Заказать в WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px;">
+      <small>© 2025 Foodies. Все права защищены.</small>
+      <small>Сделано с любовью к полезной еде.</small>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Minimal carousel for hero =====
+    (function(){
+      const slides = document.getElementById('slides');
+      const dotsWrap = document.getElementById('dots');
+      const total = slides.children.length;
+      let index = 0; let timer;
+
+      function go(i){
+        index = (i + total) % total;
+        slides.style.transform = `translateX(-${index*100}%)`;
+        [...dotsWrap.children].forEach((d,di)=>d.classList.toggle('active', di===index));
+      }
+      function buildDots(){
+        for(let i=0;i<total;i++){
+          const b = document.createElement('button');
+          b.className='dot'+(i===0?' active':'');
+          b.setAttribute('aria-label', `Слайд ${i+1}`);
+          b.onclick=()=>{ go(i); reset(); };
+          dotsWrap.appendChild(b);
+        }
+      }
+      function next(){ go(index+1); }
+      function reset(){ clearInterval(timer); timer=setInterval(next, 4200); }
+      buildDots(); go(0); reset();
+      window.addEventListener('visibilitychange', ()=> document.hidden ? clearInterval(timer) : reset());
+    })();
+  </script>
+</body>
+</html>

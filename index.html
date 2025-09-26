@@ -56,6 +56,9 @@
     .menu a{ color:#cfd2d8; font-weight:600; opacity:.9; }
     .menu a:hover{ color:#fff; }
     .actions{ display:flex; gap:.6rem; align-items:center; }
+    .lang-switch{display:inline-flex; background:#1a1b1f; border:1px solid rgba(255,255,255,.12); border-radius:999px; padding:4px;}
+    .lang-btn{border:0; background:transparent; color:#cfd2d8; font-weight:700; padding:.35rem .7rem; border-radius:999px; cursor:pointer;}
+    .lang-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#111; box-shadow:0 10px 20px rgba(255,106,0,.25);} 
 
     /* ===== Hero ===== */
     .hero{ position:relative; padding:64px 0 36px; overflow:hidden; }
@@ -102,7 +105,8 @@
 
     /* ===== Menu Gallery ===== */
     .menu-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap:12px; }
-    .menu-item{ position:relative; overflow:hidden; border-radius:16px; }
+    .menu-item{ position:relative; overflow:hidden; border-radius:16px; background:#0f0f11; aspect-ratio:4/3; }
+    .menu-item img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
     .menu-item .info{ position:absolute; inset:auto 10px 10px 10px; display:flex; justify-content:space-between; align-items:center; background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.65)); padding:10px 12px; border-radius:12px; }
     .pill{ background:#0f0f11cc; color:#fff; border:1px solid rgba(255,255,255,.15); padding:.45rem .7rem; border-radius:999px; font-weight:700; font-size:.92rem; }
 
@@ -168,6 +172,10 @@
 
     .qr-card .desc{min-height:56px;}
     .chip.link{cursor:pointer;}
+
+    /* Uniform card thumbs */
+    .card > img{ aspect-ratio: 4 / 3; width:100%; height:auto; object-fit:cover; display:block; border-radius:14px; }
+    .card:hover > img{ transform: scale(1.03); transition: transform .4s ease; }
 
     /* ===== Responsive ===== */
     @media (max-width: 1024px){
@@ -252,7 +260,11 @@
         <a href="#contact">Контакты</a>
       </nav>
       <div class="actions">
-        <a class="btn" href="menu.html">Смотреть меню</a>
+        <div class="lang-switch" role="tablist" aria-label="Переключение языка">
+          <button class="lang-btn active" data-lang="ru" aria-selected="true">Рус</button>
+          <button class="lang-btn" data-lang="kk" aria-selected="false">Қаз</button>
+        </div>
+        <a class="btn" href="menu.html" data-i18n-key="cta.menu">Смотреть меню</a>
       </div>
     </div>
   </header>
@@ -272,25 +284,25 @@
           <!-- Burger -->
           <article class="card">
             <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop" alt="Бургер" />
-            <h4>Burger Menu</h4>
+            <h4>Бургеры</h4>
             <small>25+ позиций</small>
           </article>
           <!-- Pizza (highlight) -->
           <article class="card" style="outline:2px solid var(--accent);">
             <img src="https://images.unsplash.com/photo-1548365328-9f547fb0953d?q=80&w=1200&auto=format&fit=crop" alt="Пицца" />
-            <h4>Pizza Menu</h4>
+            <h4>Пицца</h4>
             <small>20+ позиций</small>
           </article>
           <!-- Sandwich -->
           <article class="card">
             <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1200&auto=format&fit=crop" alt="Сэндвичи" />
-            <h4>Sandwich Menu</h4>
+            <h4>Сэндвичи</h4>
             <small>18+ позиций</small>
           </article>
           <!-- Salads/Burger -->
           <article class="card">
             <img src="https://images.unsplash.com/photo-1550547660-8bfc8a14167f?q=80&w=1200&auto=format&fit=crop" alt="Салаты" />
-            <h4>Green & Burger</h4>
+            <h4>Салаты</h4>
             <small>25+ позиций</small>
           </article>
         </div>
@@ -366,35 +378,35 @@
         <!-- 8 примеров -->
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?q=80&w=1800&auto=format&fit=crop" alt="Бургер"/>
-          <div class="info"><strong>BBQ Burger</strong><span class="pill" style="pointer-events:none;">3 900₸</span></div>
+          <div class="info"><strong>Бургер BBQ</strong><span class="pill" style="pointer-events:none;">3 900₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1539136788836-5699e78bfc75?q=80&w=1800&auto=format&fit=crop" alt="Пицца"/>
-          <div class="info"><strong>Margherita</strong><span class="pill" style="pointer-events:none;">3 500₸</span></div>
+          <div class="info"><strong>Маргарита</strong><span class="pill" style="pointer-events:none;">3 500₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1800&auto=format&fit=crop" alt="Салат"/>
-          <div class="info"><strong>Caesar</strong><span class="pill" style="pointer-events:none;">2 800₸</span></div>
+          <div class="info"><strong>Цезарь</strong><span class="pill" style="pointer-events:none;">2 800₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1800&auto=format&fit=crop" alt="Сэндвич"/>
-          <div class="info"><strong>Club Sandwich</strong><span class="pill" style="pointer-events:none;">2 600₸</span></div>
+          <div class="info"><strong>Клубный сэндвич</strong><span class="pill" style="pointer-events:none;">2 600₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?q=80&w=1800&auto=format&fit=crop" alt="Стейк"/>
-          <div class="info"><strong>Ribeye</strong><span class="pill" style="pointer-events:none;">8 900₸</span></div>
+          <div class="info"><strong>Рибай</strong><span class="pill" style="pointer-events:none;">8 900₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1540083691020-4b4b5078a5b3?q=80&w=1800&auto=format&fit=crop" alt="Суши"/>
-          <div class="info"><strong>Sushi Set</strong><span class="pill" style="pointer-events:none;">7 200₸</span></div>
+          <div class="info"><strong>Сет суши</strong><span class="pill" style="pointer-events:none;">7 200₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1800&auto=format&fit=crop" alt="Боул"/>
-          <div class="info"><strong>Green Bowl</strong><span class="pill" style="pointer-events:none;">3 200₸</span></div>
+          <div class="info"><strong>Зелёный боул</strong><span class="pill" style="pointer-events:none;">3 200₸</span></div>
         </div>
         <div class="menu-item">
           <img src="https://images.unsplash.com/photo-1606756790138-261b3f3d42b0?q=80&w=1800&auto=format&fit=crop" alt="Десерт"/>
-          <div class="info"><strong>Chocolate Lava</strong><span class="pill" style="pointer-events:none;">2 100₸</span></div>
+          <div class="info"><strong>Шоколадный фондан</strong><span class="pill" style="pointer-events:none;">2 100₸</span></div>
         </div>
       </div>
     </div>
@@ -539,5 +551,198 @@
       window.addEventListener('visibilitychange', ()=> document.hidden ? clearInterval(timer) : reset());
     })();
   </script>
+
+<script>
+// === RU / KZ language switch ===
+(function(){
+  const dict = {
+    ru: {
+      'nav.who':'Кто мы','nav.why':'Почему мы','nav.menu':'Фото из меню','nav.story':'О нас','nav.news':'Новости','nav.contact':'Контакты',
+      'hero.badge':'100% натурально · Без сахара',
+      'hero.h1':'Здоровая еда необходима для <span style="background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;">здоровой жизни</span>',
+      'hero.p':'Готовим из локальных продуктов, поддерживаем фермеров и заботимся о вашем здоровье. У нас нет онлайн-заказа — изучите меню и приходите, либо пишите в WhatsApp.',
+      'cta.menu':'Смотреть меню',
+      // Cards
+      'cards.t1':'Бургеры', 'cards.s1':'25+ позиций',
+      'cards.t2':'Пицца', 'cards.s2':'20+ позиций',
+      'cards.t3':'Сэндвичи', 'cards.s3':'18+ позиций',
+      'cards.t4':'Салаты', 'cards.s4':'25+ позиций',
+      // Why
+      'why.h2':'Почему мы',
+      'why.f1.t':'Без сахара', 'why.f1.p':'Баланс БЖУ и вкус — можно каждый день.',
+      'why.f2.t':'Авторские рецепты', 'why.f2.p':'Сезонные ингредиенты и локальные поставщики.',
+      'why.f3.t':'Готовим быстро', 'why.f3.p':'Чёткая mise en place и горячая подача.',
+      'why.f4.t':'Семейный подход', 'why.f4.p':'Честный сервис и стабильное качество.',
+      // Menu gallery
+      'menu.h2':'Фото из меню',
+      'menu.i1':'Бургер BBQ','menu.i2':'Маргарита','menu.i3':'Цезарь','menu.i4':'Клубный сэндвич','menu.i5':'Рибай','menu.i6':'Сет суши','menu.i7':'Зелёный боул','menu.i8':'Шоколадный фондан',
+      // App
+      'app.h3':'Наше приложение',
+      'app.p':'Сканируйте — и всё у вас в телефоне: приложение с меню и новостями, а также бонусная карта в Wallet. QR выполнены в премиальном стиле: тёмные карточки, аккуратная рамка и мягкая подсветка.',
+      'app.qr1':'Скачать приложение', 'app.qr1d':'Одна ссылка — определит платформу и откроет нужный магазин.',
+      'app.qr2':'Бонусная карта в Wallet', 'app.qr2d':'Добавьте карту: баллы и статусы всегда под рукой, без приложений.',
+      'loyalty.h':'Бонусная система', 'loyalty.note':'Повышенный % только за онлайн заказы',
+      'loyalty.t1':'Bronze', 'loyalty.r1':'0–49 000₸', 'loyalty.p1':'3%',
+      'loyalty.t2':'Silver', 'loyalty.r2':'50–149 000₸', 'loyalty.p2':'5%',
+      'loyalty.t3':'Gold', 'loyalty.r3':'150 000₸+', 'loyalty.p3':'7%',
+      'cta.wallet':'ПОЛУЧИТЬ БОНУСНУЮ КАРТУ',
+      // News
+      'news.h2':'Новости и акции',
+      'news.t1':'Сегодня','news.h1':'Сезонное меню: тыква, свёкла, гранат','news.p1':'Добавили 8 новых блюд и 3 напитка. Доступно в зале, навынос и в доставке.',
+      'news.t2':'На этой неделе','news.h2b':'-15% студентам по будням','news.p2':'Покажи студенческий — скидка действует с 10:00 до 16:00.',
+      'news.t3':'Воскресенье','news.h3':'Мастер‑класс от шефа','news.p3':'Как готовить боулы дома: сборка, соусы, баланс макро.',
+      // Story
+      'story.k':'Наша история','story.h':'Где качество еды встречается с отличным сервисом','story.p':'В Foodies мы верим, что правильное питание должно быть вкусным. Команда работает с локальными фермами и заботится об устойчивости. Присоединяйтесь к нашему сообществу — готовим с любовью и уважением к продуктам.',
+      // FAQ
+      'faq.h':'FAQ',
+      'faq.q1':'Где мы находимся?','faq.a1':'Алматы, центр. Работаем ежедневно 10:00–23:00.',
+      'faq.q2':'Можно ли заказать онлайн?','faq.a2':'Мы показываем меню на сайте; заказ — на месте или через WhatsApp.',
+      'faq.q3':'Аллергены','faq.a3':'Сообщите официанту — подскажем безопасные позиции.',
+      'faq.q4':'Оплата','faq.a4':'Наличные, карта, Apple/Google Pay.',
+      // Contacts
+      'contact.h':'Контакты','contact.p':'Алматы · Ежедневно 10:00–23:00 · +7 (700) 000‑00‑00 · Instagram: @foodies','contact.wh':'Заказать в WhatsApp'
+    },
+    kk: {
+      'nav.who':'Біз кімбіз','nav.why':'Неліктен біз','nav.menu':'Мәзірден фото','nav.story':'Біз туралы','nav.news':'Жаңалықтар','nav.contact':'Байланыс',
+      'hero.badge':'100% табиғи · Қантсыз',
+      'hero.h1':'<span style="background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;">Сау өмір</span> үшін дұрыс тамақтану керек',
+      'hero.p':'Жергілікті өнімдерден дайындаймыз, фермерлерді қолдаймыз және денсаулық жайлы ойлаймыз. Онлайн тапсырыс жоқ — мәзірді қарап, келіңіз немесе WhatsApp жазңыз.',
+      'cta.menu':'Мәзірді көру',
+      'cards.t1':'Бургерлер','cards.s1':'25+ позиция',
+      'cards.t2':'Пицца','cards.s2':'20+ позиция',
+      'cards.t3':'Сэндвичтер','cards.s3':'18+ позиция',
+      'cards.t4':'Салаттар','cards.s4':'25+ позиция',
+      'why.h2':'Неліктен біз',
+      'why.f1.t':'Қантсыз','why.f1.p':'БЖУ теңгерімі мен дәм — күн сайын.',
+      'why.f2.t':'Авторлық рецептер','why.f2.p':'Маусымдық өнімдер, жергілікті жеткізушілер.',
+      'why.f3.t':'Жылдам дайындаймыз','why.f3.p':'Mise en place және ыстық беру.',
+      'why.f4.t':'Отбасылық көзқарас','why.f4.p':'Адал сервис және тұрақты сапа.',
+      'menu.h2':'Мәзірден фото',
+      'menu.i1':'BBQ бургері','menu.i2':'Маргарита','menu.i3':'Цезарь','menu.i4':'Клуб сэндвичі','menu.i5':'Рибай','menu.i6':'Суши сеті','menu.i7':'Жасыл боул','menu.i8':'Шоколадты фондан',
+      'app.h3':'Қолданбамыз',
+      'app.p':'QR сканерлеңіз: қолданба және Wallet-тағы бонус картасы. Премиум стиль: қою карточкалар, таза жиек, жұмсақ жарық.',
+      'app.qr1':'Қолданбаны жүктеу','app.qr1d':'Бір сілтеме — платформаңызды анықтап, дүкенді ашады.',
+      'app.qr2':'Wallet-та бонус картасы','app.qr2d':'Картаны қосыңыз: ұпайлар мен мәртебе әрқашан жаныңызда.',
+      'loyalty.h':'Бонус жүйесі','loyalty.note':'Жоғары % тек онлайн тапсырыстарға',
+      'loyalty.t1':'Bronze','loyalty.r1':'0–49 000₸','loyalty.p1':'3%',
+      'loyalty.t2':'Silver','loyalty.r2':'50–149 000₸','loyalty.p2':'5%',
+      'loyalty.t3':'Gold','loyalty.r3':'150 000₸+','loyalty.p3':'7%',
+      'cta.wallet':'БОНУС КАРТАНЫ АЛУ',
+      'news.h2':'Жаңалықтар мен акциялар',
+      'news.t1':'Бүгін','news.h1':'Маусымдық мәзір: асқабақ, қызылша, анар','news.p1':'8 жаңа тағам және 3 сусын қосылды. Залда, алып кету және жеткізу.',
+      'news.t2':'Осы аптада','news.h2b':'Студенттерге -15% (жұмыс күндері)','news.p2':'Студенттік билет — жеңілдік 10:00–16:00.',
+      'news.t3':'Жексенбі','news.h3':'Аспаздан мастер-класс','news.p3':'Боулды үйде қалай жинау: соустар, макро теңгерімі.',
+      'story.k':'Біздің тарих','story.h':'Тамақ сапасы мен тамаша сервис тоғысады','story.p':'Foodies үшін дұрыс тамақтану дәмді болуы тиіс. Команда жергілікті фермалармен жұмыс істейді және тұрақтылыққа мән береді.',
+      'faq.h':'Сұрақ-жауап',
+      'faq.q1':'Қайда орналасқанбыз?','faq.a1':'Алматы, орталық. Күнделікті 10:00–23:00.',
+      'faq.q2':'Онлайн тапсырыс бар ма?','faq.a2':'Сайтта мәзір көрсетілген; тапсырыс — орнында не WhatsApp арқылы.',
+      'faq.q3':'Аллергендер','faq.a3':'Айтыңыз — қауіпсіз позицияларды ұсынамыз.',
+      'faq.q4':'Төлем','faq.a4':'Қолма-қол, карта, Apple/Google Pay.',
+      'contact.h':'Байланыс','contact.p':'Алматы · Күнделікті 10:00–23:00 · +7 (700) 000‑00‑00 · Instagram: @foodies','contact.wh':'WhatsApp арқылы тапсырыс'
+    }
+  };
+
+  function set(lang){
+    document.documentElement.lang = (lang==='kk'?'kk':'ru');
+    localStorage.setItem('lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active', b.dataset.lang===lang));
+
+    // Top nav
+    const navMap = [['#who','nav.who'],['#why','nav.why'],['#menu','nav.menu'],['#story','nav.story'],['#news','nav.news'],['#contact','nav.contact']];
+    navMap.forEach(([href,key])=>{ const a=document.querySelector(`nav.menu a[href="${href}"]`); if(a&&dict[lang][key]) a.textContent=dict[lang][key]; });
+
+    // Hero
+    const badge=document.querySelector('.hero .badge'); if(badge) badge.textContent=dict[lang]['hero.badge'];
+    const h1=document.querySelector('.hero h1'); if(h1) h1.innerHTML=dict[lang]['hero.h1'];
+    const hp=document.querySelector('.hero p'); if(hp) hp.textContent=dict[lang]['hero.p'];
+    const cta=document.querySelector('.actions .btn[data-i18n-key="cta.menu"]'); if(cta) cta.textContent=dict[lang]['cta.menu'];
+
+    // Cards under hero
+    const cardTitles = document.querySelectorAll('.card-row .card h4');
+    const cardSmalls = document.querySelectorAll('.card-row .card small');
+    ['cards.t1','cards.t2','cards.t3','cards.t4'].forEach((k,i)=>{ if(cardTitles[i]) cardTitles[i].textContent = dict[lang][k]; });
+    ['cards.s1','cards.s2','cards.s3','cards.s4'].forEach((k,i)=>{ if(cardSmalls[i]) cardSmalls[i].textContent = dict[lang][k]; });
+
+    // Why
+    const whyH2=document.querySelector('#why h2'); if(whyH2) whyH2.textContent=dict[lang]['why.h2'];
+    const whyTs=document.querySelectorAll('#why .feature h5');
+    const whyPs=document.querySelectorAll('#why .feature p');
+    ['why.f1.t','why.f2.t','why.f3.t','why.f4.t'].forEach((k,i)=>{ if(whyTs[i]) whyTs[i].textContent=dict[lang][k]; });
+    ['why.f1.p','why.f2.p','why.f3.p','why.f4.p'].forEach((k,i)=>{ if(whyPs[i]) whyPs[i].textContent=dict[lang][k]; });
+
+    // Menu gallery
+    const menuH2=document.querySelector('#menu h2'); if(menuH2) menuH2.textContent=dict[lang]['menu.h2'];
+    const items=document.querySelectorAll('#menu .menu-item .info strong');
+    ['menu.i1','menu.i2','menu.i3','menu.i4','menu.i5','menu.i6','menu.i7','menu.i8'].forEach((k,i)=>{ if(items[i] && dict[lang][k]) items[i].textContent=dict[lang][k]; });
+
+    // App & loyalty
+    const appH3=document.querySelector('#app h3'); if(appH3) appH3.textContent=dict[lang]['app.h3'];
+    const appP=document.querySelector('#app p'); if(appP) appP.textContent=dict[lang]['app.p'];
+    const qr1h=document.querySelectorAll('#app .qr-card h4')[0]; if(qr1h) qr1h.textContent=dict[lang]['app.qr1'];
+    const qr1d=document.querySelectorAll('#app .qr-card .desc')[0]; if(qr1d) qr1d.textContent=dict[lang]['app.qr1d'];
+    const qr2h=document.querySelectorAll('#app .qr-card h4')[1]; if(qr2h) qr2h.textContent=dict[lang]['app.qr2'];
+    const qr2d=document.querySelectorAll('#app .qr-card .desc')[1]; if(qr2d) qr2d.textContent=dict[lang]['app.qr2d'];
+    const loyH=document.querySelector('#app .loyalty-card h4'); if(loyH) loyH.textContent=dict[lang]['loyalty.h'];
+    const loyNote=document.querySelector('#app .loyalty-card .note'); if(loyNote) loyNote.textContent=dict[lang]['loyalty.note'];
+    const sub = document.querySelectorAll('#app .loyalty-card .tier .sub');
+    const names = document.querySelectorAll('#app .loyalty-card .tier b');
+    const ranges = document.querySelectorAll('#app .loyalty-card .tier .sub small');
+    const pcts = document.querySelectorAll('#app .loyalty-card .tier .sub .pct-chip');
+    const lk=['1','2','3'];
+    lk.forEach((s,i)=>{ if(names[i]) names[i].childNodes[names[i].childNodes.length-1].nodeValue = ' ' + dict[lang]['loyalty.t'+s]; });
+    lk.forEach((s,i)=>{ if(ranges[i]) ranges[i].textContent=dict[lang]['loyalty.r'+s]; });
+    lk.forEach((s,i)=>{ if(pcts[i]) pcts[i].textContent=dict[lang]['loyalty.p'+s]; });
+    const ctaW=document.querySelector('#app .cta-row a'); if(ctaW) ctaW.textContent=dict[lang]['cta.wallet'];
+
+    // News (if карточки формата .post есть)
+    const newsH2=document.querySelector('#news h2'); if(newsH2 && dict[lang]['news.h2']) newsH2.textContent=dict[lang]['news.h2'];
+    const times=document.querySelectorAll('#news time');
+    if(times[0]) times[0].textContent=dict[lang]['news.t1'];
+    if(times[1]) times[1].textContent=dict[lang]['news.t2'];
+    if(times[2]) times[2].textContent=dict[lang]['news.t3'];
+    const nh=document.querySelectorAll('#news h4');
+    if(nh[0]) nh[0].textContent=dict[lang]['news.h1'];
+    if(nh[1]) nh[1].textContent=dict[lang]['news.h2b'];
+    if(nh[2]) nh[2].textContent=dict[lang]['news.h3'];
+    const np=document.querySelectorAll('#news p');
+    if(np[0]) np[0].textContent=dict[lang]['news.p1'];
+    if(np[1]) np[1].textContent=dict[lang]['news.p2'];
+    if(np[2]) np[2].textContent=dict[lang]['news.p3'];
+
+    // Story
+    const sk=document.querySelector('#story .kicker'); if(sk) sk.textContent=dict[lang]['story.k'];
+    const sh=document.querySelector('#story h2'); if(sh) sh.textContent=dict[lang]['story.h'];
+    const sp=document.querySelector('#story p'); if(sp) sp.textContent=dict[lang]['story.p'];
+
+    // FAQ
+    const fh=document.querySelector('.section h2:contains("FAQ")');
+    const faqTitle=document.querySelector('.section h2:last-of-type');
+    const faqH=document.querySelectorAll('section .faq ~ h2')[0];
+    const faq=document.querySelectorAll('.faq .qa');
+    if(document.querySelector('.faq')){
+      const ftitle=document.querySelectorAll('h2');
+      const faqH2=document.querySelectorAll('.section h2');
+      const faqTitleNode=[...faqH2].find(el=>el.textContent.trim().toLowerCase().includes('faq')||el.textContent.trim().toLowerCase().includes('сұрақ') );
+      if(faqTitleNode) faqTitleNode.textContent=dict[lang]['faq.h'];
+      if(faq[0]) faq[0].innerHTML='<b>'+dict[lang]['faq.q1']+'</b><br>'+dict[lang]['faq.a1'];
+      if(faq[1]) faq[1].innerHTML='<b>'+dict[lang]['faq.q2']+'</b><br>'+dict[lang]['faq.a2'];
+      if(faq[2]) faq[2].innerHTML='<b>'+dict[lang]['faq.q3']+'</b><br>'+dict[lang]['faq.a3'];
+      if(faq[3]) faq[3].innerHTML='<b>'+dict[lang]['faq.q4']+'</b><br>'+dict[lang]['faq.a4'];
+    }
+
+    // Contacts
+    const ch=document.querySelector('#contact h3'); if(ch) ch.textContent=dict[lang]['contact.h'];
+    const cp=document.querySelector('#contact .offer p'); if(cp) cp.textContent=dict[lang]['contact.p'];
+    const ctaWhats=document.querySelector('#contact a.btn.ghost'); if(ctaWhats) ctaWhats.textContent=dict[lang]['contact.wh'];
+  }
+
+  // Init + events
+  const saved = localStorage.getItem('lang') || (navigator.language||'ru').startsWith('kk') ? 'kk' : 'ru';
+  set(saved);
+  document.querySelectorAll('.lang-btn').forEach(b=>{
+    b.addEventListener('click',()=> set(b.dataset.lang));
+  });
+})();
+</script>
 </body>
 </html>
